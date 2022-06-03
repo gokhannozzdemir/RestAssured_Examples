@@ -1,3 +1,5 @@
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.json.simple.JSONObject;
 import org.testng.annotations.Test;
 
@@ -40,9 +42,81 @@ public class APIMethods {
     @Test //GET method for a real api
     public void Test_3 () {
         given().
-                get("https://www.googletagmanager.com/gtm.js?id=GTM-WFZMVP").
+                get("https://hstats.hepsiburada.com/api/track").
                 then().
                 statusCode(200).log();
+    }
+    @Test //POST Method for Hepsiburada product services
+    public void Test_4 (){
+        HashMap<String, Object> map_1 = new HashMap<>();
+        map_1.put("path","/api/track");
+
+        JSONObject request = new JSONObject(map_1);
+
+        given().
+                body(request.toJSONString()).
+                when().
+                post("https://hstats.hepsiburada.com/api/track").
+                then().
+                statusCode(200).
+                log().all();
+
+    }
+
+    @Test //PUT Method for simple example
+    public void Test_5 () {
+        Map<String, Object> map_2 = new HashMap<>();
+        map_2.put("name","Gokhan");
+        map_2.put("job","Builder");
+        System.out.println(map_2);
+
+        JSONObject request = new JSONObject(map_2);
+        given().
+                body(request.toJSONString()).
+                when().
+                put("https://reqres.in/api/users/2").
+                then().
+                statusCode(200).log().all();
+
+    }
+    @Test //PUT Method without HashMap
+    public void Test_6 (){
+        JSONObject request = new JSONObject();
+        request.put("name","Brown");
+        request.put("job","Developer");
+
+        given().
+                header("Content-Type","application/json").
+                contentType(ContentType.JSON).
+                accept(ContentType.JSON).
+                body(request.toJSONString()).
+                when().
+                put("https://reqres.in/api/users/2").
+                then().statusCode(200).log().all();
+    }
+    @Test
+    public void Test_7(){
+        JSONObject request = new JSONObject();
+        request.put("name","Allan");
+        request.put("Job","None");
+
+        given().
+                header("Content-Type","application/json").
+                contentType(ContentType.JSON).
+                accept(ContentType.JSON).
+                body(request.toJSONString()).
+                when().
+                patch("https://reqres.in/api/users/2").
+                then().
+                statusCode(200).log().all();
+    }
+    @Test
+    public void Test_8(){
+        given().
+                delete("https://reqres.in/api/users/2").
+                then().
+                statusCode(204).
+                log().all();
     }
 
 }
